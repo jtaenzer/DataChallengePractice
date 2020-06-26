@@ -86,4 +86,20 @@ plt.ylabel("Count")
 plt.savefig("./plots/vehicle_info_delay_hist.png")
 plt.close()
 
-data_bgc_consenters = data[~data['bgc_date'].isnull()]
+
+data['bgc_delay'] = (pd.to_datetime(data['bgc_date']) - pd.to_datetime(data['signup_date'])).dt.days
+data['vehicle_info_delay'] = (pd.to_datetime(data['vehicle_added_date']) - pd.to_datetime(data['signup_date'])).dt.days
+
+fig, ax = plt.subplots()
+ax.scatter(data['bgc_delay'][data['started_driving'] == False],
+           data['vehicle_info_delay'][data['started_driving'] == False],
+           c="r", label="no first trip")
+ax.scatter(data['bgc_delay'][data['started_driving'] == True],
+           data['vehicle_info_delay'][data['started_driving'] == True],
+           c="g", label="first trip")
+ax.legend()
+plt.xlabel("bgc_delay")
+plt.ylabel("vehicle_info_delay")
+plt.savefig("./plots/delay_scatter.png")
+plt.close()
+
